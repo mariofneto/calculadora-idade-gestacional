@@ -1,4 +1,4 @@
-package model;
+package dev.src.main.java.com.mario.dev.model;
 
 import java.util.Date;
 
