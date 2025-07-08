@@ -1,24 +1,25 @@
-package dev.src.main.java.com.mario.dev.model;
+package com.mario.dev.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public abstract class Crianca {
 
     private String nome;
-    private Date dataNascimento;
+    private LocalDate dataNascimento;
     private Double pesoEmKg;
-    private Integer idadeGestacionalEmSemanas;
-    private Integer idadeGestacionalEmDias;
+    private Integer idadeGestacionalS;
+    private Integer idadeGestacionalD;
 
     public Crianca() {
     }
 
-    public Crianca(String nome, Date dataNascimento, Double pesoEmKg, Integer idadeGestacionalEmSemanas, Integer idadeGestacionalEmDias) {
+    public Crianca(String nome, LocalDate dataNascimento, Double pesoEmKg, Integer idadeGestacionalS,
+                   Integer idadeGestacionalD) {
         this.nome = nome;
         this.dataNascimento = dataNascimento;
         this.pesoEmKg = pesoEmKg;
-        this.idadeGestacionalEmSemanas = idadeGestacionalEmSemanas;
-        this.idadeGestacionalEmDias = idadeGestacionalEmDias;
+        this.idadeGestacionalS = idadeGestacionalS;
+        this.idadeGestacionalD = idadeGestacionalD;
     }
 
     public String getNome() {
@@ -29,11 +30,11 @@ public abstract class Crianca {
         this.nome = nome;
     }
 
-    public Date getDataNascimento() {
+    public LocalDate getDataNascimento() {
         return dataNascimento;
     }
 
-    public void setDataNascimento(Date dataNascimento) {
+    public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 
@@ -45,20 +46,20 @@ public abstract class Crianca {
         this.pesoEmKg = pesoEmKg;
     }
 
-    public Integer getIdadeGestacionalEmSemanas() {
-        return idadeGestacionalEmSemanas;
+    public Integer getIdadeGestacionalS() {
+        return idadeGestacionalS;
     }
 
-    public void setIdadeGestacionalEmSemanas(Integer idadeGestacionalEmSemanas) {
-        this.idadeGestacionalEmSemanas = idadeGestacionalEmSemanas;
+    public void setIdadeGestacionalS(Integer idadeGestacionalS) {
+        this.idadeGestacionalS = idadeGestacionalS;
     }
 
-    public Integer getIdadeGestacionalEmDias() {
-        return idadeGestacionalEmDias;
+    public Integer getIdadeGestacionalD() {
+        return idadeGestacionalD;
     }
 
-    public void setIdadeGestacionalEmDias(Integer idadeGestacionalEmDias) {
-        this.idadeGestacionalEmDias = idadeGestacionalEmDias;
+    public void setIdadeGestacionalD(Integer idadeGestacionalD) {
+        this.idadeGestacionalD = idadeGestacionalD;
     }
 
     @Override
@@ -67,8 +68,10 @@ public abstract class Crianca {
                 "nome='" + nome + '\'' +
                 ", dataNascimento=" + dataNascimento +
                 ", pesoEmKg=" + pesoEmKg +
-                ", idadeGestacionalEmSemanas=" + idadeGestacionalEmSemanas +
-                ", idadeGestacionalEmDias=" + idadeGestacionalEmDias +
+                ", idadeGestacionalEmSemanas=" + idadeGestacionalS +
+                ", idadeGestacionalEmDias=" + idadeGestacionalD +
                 '}';
     }
+
+    public abstract Long diasVividos();
 }
