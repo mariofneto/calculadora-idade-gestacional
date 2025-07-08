@@ -2,10 +2,11 @@ package com.mario.dev.controller;
 
 import com.mario.dev.model.PreTermo;
 import com.mario.dev.model.Termo;
+import com.mario.dev.service.PreTermoService;
+import com.mario.dev.service.TermoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
@@ -13,15 +14,42 @@ import java.time.LocalDate;
 @RequestMapping
 public class CriancaController {
 
+    @Autowired
+    PreTermoService preTermoService;
 
-    @GetMapping("/pretermo")
-    public String getPreTermo(){
-        PreTermo pt1 = new PreTermo("Abner", LocalDate.of(2025, 06, 21), 2.5, 36, 6);
-        //Termo t1 = new Termo("José Henrique", LocalDate.of(2025, 06, 11), 2.5, 39, 0);
+    @Autowired
+    TermoService TermoService;
 
-        pt1.semanasEDiasCorrigidos();
-        //t1.semanasEDiasCorrigidos();
 
-        return "ok";
+    @GetMapping("/pretermo/{id}")
+    public ResponseEntity<String> getPreTermoById(@PathVariable Long id){
+        PreTermo pt = preTermoService.getPreTermoId(id).orElseThrow();
+
+        return ResponseEntity.ok().body(pt.semanasEDiasCorrigidos());
     }
+
+    @PostMapping("/pretermo/")
+    public ResponseEntity<String> createPreTermo(@RequestBody PreTermo preTermo){
+
+        preTermoService.create(preTermo);
+
+        return ResponseEntity.ok().body("criado");
+    }
+
+    @GetMapping("/termo/{id}")
+    public ResponseEntity<String> getTermoById(@PathVariable Long id){
+        Termo t = TermoService.getTermoId(id).orElseThrow();
+
+        return ResponseEntity.ok().body(t.semanasEDiasCorrigidos());
+    }
+
+    @PostMapping("/termo/")
+    public ResponseEntity<String> createTermo(@RequestBody Termo termo){
+
+        TermoService.create(termo);
+
+        return ResponseEntity.ok().body("criado");
+    }
+
+
 }

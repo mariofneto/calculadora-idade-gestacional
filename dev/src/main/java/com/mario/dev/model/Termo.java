@@ -1,10 +1,17 @@
 package com.mario.dev.model;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-// nao precisa corrigir idade
+@Entity
+@Table(name = "tb_termo")
 public class Termo extends Crianca {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private Long diasVividos;
 
@@ -13,6 +20,10 @@ public class Termo extends Crianca {
 
     public Termo(String nome, LocalDate dataNascimento, Double pesoEmKg, Integer idadeGestacionalS, Integer idadeGestacionalD) {
         super(nome, dataNascimento, pesoEmKg, idadeGestacionalS, idadeGestacionalD);
+    }
+
+    public Long getId() {
+        return id;
     }
 
     @Override
@@ -32,18 +43,23 @@ public class Termo extends Crianca {
         return diasVividos() % 7;
     }
 
-    public void semanasEDiasCorrigidos(){
+    public String semanasEDiasCorrigidos(){
+        String msg = "";
         if(semanasDeVida() > 0 && semanasDeVida() < 4){
-            System.out.printf("%d semanas e %d dias pós termo%n", semanasDeVida(), diasDeVida());
+            msg = String.format("%d semanas e %d dias%n", semanasDeVida(), diasDeVida());
+            return msg;
         }
         else if(semanasDeVida() >= 4){
             Long mesesDeVida = diasVividos() / 30;
             Long diasVividos = diasVividos() % 30;
 
-            System.out.printf("%d meses e %d dias pós termo%n", mesesDeVida, diasVividos);
+            msg = String.format("%d meses e %d dias%n", mesesDeVida, diasVividos);
+            return msg;
         }
         else if(semanasDeVida() == 0){
-            System.out.printf("%d dias pós termo%n", diasDeVida());
+            msg = String.format("%d dias%n", diasDeVida());
+            return msg;
         }
+        return msg;
     }
 }

@@ -1,7 +1,10 @@
 package com.mario.dev.model;
 
+import jakarta.persistence.MappedSuperclass;
+
 import java.time.LocalDate;
 
+@MappedSuperclass
 public abstract class Crianca {
 
     private String nome;
