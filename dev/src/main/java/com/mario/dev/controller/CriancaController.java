@@ -1,55 +1,63 @@
 package com.mario.dev.controller;
 
-import com.mario.dev.model.PreTermo;
-import com.mario.dev.model.Termo;
-import com.mario.dev.service.PreTermoService;
-import com.mario.dev.service.TermoService;
+import com.mario.dev.model.Crianca;
+import com.mario.dev.service.CriancaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping
+@CrossOrigin(origins = "http://localhost:4200")
 public class CriancaController {
 
     @Autowired
-    PreTermoService preTermoService;
+    CriancaService service;
 
-    @Autowired
-    TermoService TermoService;
-
-
-    @GetMapping("/pretermo/{id}")
-    public ResponseEntity<String> getPreTermoById(@PathVariable Long id){
-        PreTermo pt = preTermoService.getPreTermoId(id).orElseThrow();
-
-        return ResponseEntity.ok().body(pt.semanasEDiasCorrigidos());
+    @GetMapping("/")
+    public ResponseEntity<List<Crianca>> readAllCrianca(){
+        return ResponseEntity.ok(service.readAllCrianca());
     }
 
-    @PostMapping("/pretermo/")
-    public ResponseEntity<String> createPreTermo(@RequestBody PreTermo preTermo){
+    @GetMapping("/{id}")
+    public ResponseEntity<Crianca> getById(@PathVariable Long id){
+        Crianca c = service.readResultById(id);
 
-        preTermoService.create(preTermo);
-
-        return ResponseEntity.ok().body("criado");
+        return ResponseEntity.ok(c);
     }
 
-    @GetMapping("/termo/{id}")
-    public ResponseEntity<String> getTermoById(@PathVariable Long id){
-        Termo t = TermoService.getTermoId(id).orElseThrow();
+    @GetMapping("/res/{id}")
+    public ResponseEntity<String> readResultById(@PathVariable Long id){
+        Crianca c = service.readResultById(id);
 
-        return ResponseEntity.ok().body(t.semanasEDiasCorrigidos());
+        return ResponseEntity.ok(c.igcEmSemanasEDias());
     }
 
-    @PostMapping("/termo/")
-    public ResponseEntity<String> createTermo(@RequestBody Termo termo){
+    @PostMapping("/")
+    public ResponseEntity<String> create(@RequestBody Crianca crianca){
 
-        TermoService.create(termo);
+        service.create(crianca);
 
-        return ResponseEntity.ok().body("criado");
+        return ResponseEntity.ok().body("criado com sucesso!");
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Crianca> update(@PathVariable Long id, Crianca crianca){
+        Crianca c = service.update(id, crianca);
+
+        return  ResponseEntity.ok().body(c);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        service.delete(id);
+        return null;
+    }
+
+
+
 
 
 }

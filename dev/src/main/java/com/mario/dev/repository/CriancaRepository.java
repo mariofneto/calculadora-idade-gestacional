@@ -1,9 +1,9 @@
 package com.mario.dev.repository;
 
-import com.mario.dev.model.PreTermo;
+import com.mario.dev.model.Crianca;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PreTermoRepository extends JpaRepository<PreTermo, Long> {
+public interface CriancaRepository extends JpaRepository<Crianca, Long> {
 }
