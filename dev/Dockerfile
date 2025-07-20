@@ -1,22 +1,21 @@
-# Etapa de build com Maven e JDK 17
-FROM maven:3.9.6-eclipse-temurin-17 AS build
-
-WORKDIR /app
-
-COPY pom.xml .
-COPY src ./src
-
-RUN mvn clean package -DskipTests
-
-# Etapa de execução (runtime) com JDK 17
 FROM eclipse-temurin:17-jdk
 
 WORKDIR /app
 
-COPY --from=build /app/target/*.jar app.jar
+# Instala Maven diretamente (para buildar dentro da imagem)
+RUN apt-get update && \
+    apt-get install -y maven && \
+    apt-get clean
 
-ENV JAVA_OPTS=""
+# Copia tudo
+COPY . .
 
-EXPOSE 8080
+# Builda a aplicação
+RUN mvn clean package -DskipTests
 
-CMD ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
+# Expõe a porta configurada dinamicamente
+ENV PORT=8080
+EXPOSE ${PORT}
+
+# Comando para rodar a aplicação
+CMD ["sh", "-c", "java -jar target/*.jar"]
