@@ -1,17 +1,15 @@
-# Etapa de build
-FROM maven:3.8.6-openjdk-17-slim AS build
+# Etapa de build com Maven e JDK 17
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 
 WORKDIR /app
 
 COPY pom.xml .
-RUN mvn dependency:go-offline
-
 COPY src ./src
 
 RUN mvn clean package -DskipTests
 
-# Etapa de execução
-FROM openjdk:17-alpine
+# Etapa de execução (runtime) com JDK 17
+FROM eclipse-temurin:17-jdk
 
 WORKDIR /app
 
@@ -21,4 +19,4 @@ ENV JAVA_OPTS=""
 
 EXPOSE 8080
 
-CMD java $JAVA_OPTS -jar app.jar
+CMD ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
