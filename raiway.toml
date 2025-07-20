@@ -1,0 +1,7 @@
+[build]
+builder = "Nixpacks"
+buildCommand = "cd dev && ./mvnw clean package -DskipTests"
+
+[start]
+cmd = "java -jar dev/target/dev-0.0.1-SNAPSHOT.jar"
+
