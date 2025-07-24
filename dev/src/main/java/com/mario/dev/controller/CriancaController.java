@@ -16,7 +16,7 @@ public class CriancaController {
     @Autowired
     CriancaService service;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<Crianca>> readAllCrianca(){
         return ResponseEntity.ok(service.readAllCrianca());
     }
@@ -35,7 +35,7 @@ public class CriancaController {
         return ResponseEntity.ok(c.igcEmSemanasEDias());
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<String> create(@RequestBody Crianca crianca){
 
         service.create(crianca);
