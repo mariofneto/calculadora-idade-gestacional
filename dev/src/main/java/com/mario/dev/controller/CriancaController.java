@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/criancas")
 @CrossOrigin(origins = "*")
 public class CriancaController {
 
@@ -17,47 +17,37 @@ public class CriancaController {
     CriancaService service;
 
     @GetMapping
-    public ResponseEntity<List<Crianca>> readAllCrianca(){
+    public ResponseEntity<List<Crianca>> readAllCrianca() {
         return ResponseEntity.ok(service.readAllCrianca());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Crianca> getById(@PathVariable Long id){
+    public ResponseEntity<Crianca> getById(@PathVariable Long id) {
         Crianca c = service.readResultById(id);
-
         return ResponseEntity.ok(c);
     }
 
     @GetMapping("/res/{id}")
-    public ResponseEntity<String> readResultById(@PathVariable Long id){
+    public ResponseEntity<String> readResultById(@PathVariable Long id) {
         Crianca c = service.readResultById(id);
-
         return ResponseEntity.ok(c.igcEmSemanasEDias());
     }
 
     @PostMapping
-    public ResponseEntity<String> create(@RequestBody Crianca crianca){
-
+    public ResponseEntity<String> create(@RequestBody Crianca crianca) {
         service.create(crianca);
-
         return ResponseEntity.ok().body("criado com sucesso!");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Crianca> update(@PathVariable Long id, Crianca crianca){
+    public ResponseEntity<Crianca> update(@PathVariable Long id, @RequestBody Crianca crianca) {
         Crianca c = service.update(id, crianca);
-
-        return  ResponseEntity.ok().body(c);
+        return ResponseEntity.ok().body(c);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
-        return null;
+        return ResponseEntity.noContent().build();
     }
-
-
-
-
-
 }
