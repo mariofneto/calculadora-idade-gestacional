@@ -1,0 +1,5 @@
+com\mario\dev\controller\CriancaController.class
+com\mario\dev\CalculadoraIdadeGestacionalApplication.class
+com\mario\dev\model\Crianca.class
+com\mario\dev\repository\CriancaRepository.class
+com\mario\dev\service\CriancaService.class
