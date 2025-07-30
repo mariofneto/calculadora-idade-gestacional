@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 
@@ -45,7 +46,7 @@ public class Crianca {
     }
 
     public Long diasVividos() {
-        return ChronoUnit.DAYS.between(getDataNascimento(), LocalDate.now());
+        return ChronoUnit.DAYS.between(getDataNascimento(), LocalDate.now(ZoneId.of("America/Sao_Paulo")));
     }
 
     public Integer igcEmDias() {
@@ -54,7 +55,6 @@ public class Crianca {
     }
 
     public String igcEmSemanasEDias() {
-        Locale.setDefault(new Locale("pt", "BR"));
 
         if (isPreTermo) {
             long diasVividos = diasVividos();
@@ -82,18 +82,17 @@ public class Crianca {
             }
 
         } else {
-            Locale.setDefault(new Locale("pt", "BR"));
-            
+
             Long dias = diasVividos();
             if (dias >= 7) {
 
-                long meses = ChronoUnit.MONTHS.between(getDataNascimento(), LocalDate.now());
+                long meses = ChronoUnit.MONTHS.between(getDataNascimento(), LocalDate.now(ZoneId.of("America/Sao_Paulo")));
 
                 // APENAS UM AUXILIAR PARA NO CALCULO DE SEMANAS EXCLUIR O QUE JÁ FOI CONTADO NO MÊS
                 LocalDate auxMes = getDataNascimento().plusMonths(meses);
 
-                long semanas = ChronoUnit.DAYS.between(auxMes, LocalDate.now()) / 7;
-                long diasRestantes = ChronoUnit.DAYS.between(auxMes, LocalDate.now()) % 7;
+                long semanas = ChronoUnit.DAYS.between(auxMes, LocalDate.now(ZoneId.of("America/Sao_Paulo"))) / 7;
+                long diasRestantes = ChronoUnit.DAYS.between(auxMes, LocalDate.now(ZoneId.of("America/Sao_Paulo"))) % 7;
 
                 return String.format("%d meses, %d semanas e %d dias", meses, semanas, diasRestantes);
             } else {
