@@ -5,6 +5,7 @@ import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Locale;
 
 @Entity
 @Table(name = "tb_criancas")
@@ -53,6 +54,8 @@ public class Crianca {
     }
 
     public String igcEmSemanasEDias() {
+        Locale.setDefault(new Locale("pt", "BR"));
+
         if (isPreTermo) {
             long diasVividos = diasVividos();
 
@@ -79,6 +82,8 @@ public class Crianca {
             }
 
         } else {
+            Locale.setDefault(new Locale("pt", "BR"));
+            
             Long dias = diasVividos();
             if (dias >= 7) {
 
