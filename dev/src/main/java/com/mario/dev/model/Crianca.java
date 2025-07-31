@@ -3,6 +3,7 @@ package com.mario.dev.model;
 import jakarta.persistence.*;
 import org.springframework.cglib.core.Local;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -69,7 +70,14 @@ public class Crianca {
             if (getIdadeGestacionalS() < 37) {
                 // para ver se é negativo, se sim, pega o valor absoluto
                 if(semanas <= 0 && dias <= 0){
-                    return String.format("Faltam %d semanas e %d dias para corrigir a idade", Math.abs(semanas), Math.abs(dias));
+                    long somaSemanasDias = (Math.abs(semanas) * 7) + Math.abs(dias);
+                    long idadeCorrigida = 280 - somaSemanasDias;
+
+                    String[] res = {};
+
+                    return String.format("%d semanas e %d dias\n\nFaltam %d semanas e %d" +
+                                    " dias para corrigir a idade",
+                            idadeCorrigida/7, idadeCorrigida % 7, Math.abs(semanas), Math.abs(dias));
                 }
                 else {
                     return String.format("%d semanas e %d dias", semanas, dias);
