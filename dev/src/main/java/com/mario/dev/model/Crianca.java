@@ -73,14 +73,26 @@ public class Crianca {
                     long somaSemanasDias = (Math.abs(semanas) * 7) + Math.abs(dias);
                     long idadeCorrigida = 280 - somaSemanasDias;
 
-                    String[] res = {};
-
                     return String.format("%d semanas e %d dias\n\nFaltam %d semanas e %d" +
                                     " dias para corrigir a idade",
                             idadeCorrigida/7, idadeCorrigida % 7, Math.abs(semanas), Math.abs(dias));
                 }
                 else {
-                    return String.format("%d semanas e %d dias", semanas, dias);
+                    long diasAte40semanas = 280 - (getIdadeGestacionalS()*7+getIdadeGestacionalD());
+
+                    LocalDate novoNascimento = ChronoUnit.DAYS.addTo(getDataNascimento(), diasAte40semanas);
+
+                    long meses = ChronoUnit.MONTHS.between(novoNascimento, LocalDate.now(ZoneId.of("America/Sao_Paulo")));
+
+                    // APENAS UM AUXILIAR PARA NO CALCULO DE SEMANAS EXCLUIR O QUE JÁ FOI CONTADO NO MÊS
+                    LocalDate auxMes = novoNascimento.plusMonths(meses);
+
+                    semanas = ChronoUnit.DAYS.between(auxMes, LocalDate.now(ZoneId.of("America/Sao_Paulo"))) / 7;
+                    long diasRestantes = ChronoUnit.DAYS.between(auxMes, LocalDate.now(ZoneId.of("America/Sao_Paulo"))) % 7;
+
+
+                    return String.format("%d meses, %d semanas e %d dias", meses, semanas, diasRestantes);
+
                 }
             }
             // quando só tem dias, não deu semanas ainda
@@ -101,6 +113,7 @@ public class Crianca {
 
                 long semanas = ChronoUnit.DAYS.between(auxMes, LocalDate.now(ZoneId.of("America/Sao_Paulo"))) / 7;
                 long diasRestantes = ChronoUnit.DAYS.between(auxMes, LocalDate.now(ZoneId.of("America/Sao_Paulo"))) % 7;
+
 
                 return String.format("%d meses, %d semanas e %d dias", meses, semanas, diasRestantes);
             } else {
