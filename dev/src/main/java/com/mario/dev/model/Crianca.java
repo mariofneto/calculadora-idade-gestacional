@@ -1,9 +1,13 @@
 package com.mario.dev.model;
 
 import jakarta.persistence.*;
+import org.springframework.cglib.core.Local;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.Locale;
 
 @Entity
 @Table(name = "tb_criancas")
@@ -43,7 +47,7 @@ public class Crianca {
     }
 
     public Long diasVividos() {
-        return ChronoUnit.DAYS.between(getDataNascimento(), LocalDate.now());
+        return ChronoUnit.DAYS.between(getDataNascimento(), LocalDate.now(ZoneId.of("America/Sao_Paulo")));
     }
 
     public Integer igcEmDias() {
@@ -52,26 +56,66 @@ public class Crianca {
     }
 
     public String igcEmSemanasEDias() {
+
         if (isPreTermo) {
+            long diasVividos = diasVividos();
+
             int totalDias = igcEmDias();
-            int semanas = totalDias / 7;
-            int dias = totalDias % 7;
+
+            long diferencaEmDiasCorrigida = diasVividos - ((40 * 7) - ((getIdadeGestacionalS() * 7) + getIdadeGestacionalD()));
+
+            long semanas = diferencaEmDiasCorrigida / 7;
+            long dias = diferencaEmDiasCorrigida - semanas * 7;
 
             if (getIdadeGestacionalS() < 37) {
-                return String.format("%d semanas e %d dias (pré-termo)", semanas, dias);
-            } else if (getIdadeGestacionalS() <= 40) {
-                return String.format("%d semanas e %d dias (a termo)", semanas, dias);
-            } else {
+                // para ver se é negativo, se sim, pega o valor absoluto
+                if(semanas <= 0 && dias <= 0){
+                    long somaSemanasDias = (Math.abs(semanas) * 7) + Math.abs(dias);
+                    long idadeCorrigida = 280 - somaSemanasDias;
+
+                    return String.format("%d semanas e %d dias\n\nFaltam %d semanas e %d" +
+                                    " dias para corrigir a idade",
+                            idadeCorrigida/7, idadeCorrigida % 7, Math.abs(semanas), Math.abs(dias));
+                }
+                else {
+                    long diasAte40semanas = 280 - (getIdadeGestacionalS()*7+getIdadeGestacionalD());
+
+                    LocalDate novoNascimento = ChronoUnit.DAYS.addTo(getDataNascimento(), diasAte40semanas);
+
+                    long meses = ChronoUnit.MONTHS.between(novoNascimento, LocalDate.now(ZoneId.of("America/Sao_Paulo")));
+
+                    // APENAS UM AUXILIAR PARA NO CALCULO DE SEMANAS EXCLUIR O QUE JÁ FOI CONTADO NO MÊS
+                    LocalDate auxMes = novoNascimento.plusMonths(meses);
+
+                    semanas = ChronoUnit.DAYS.between(auxMes, LocalDate.now(ZoneId.of("America/Sao_Paulo"))) / 7;
+                    long diasRestantes = ChronoUnit.DAYS.between(auxMes, LocalDate.now(ZoneId.of("America/Sao_Paulo"))) % 7;
+
+
+                    return String.format("%d meses, %d semanas e %d dias", meses, semanas, diasRestantes);
+
+                }
+            }
+            // quando só tem dias, não deu semanas ainda
+            else {
                 int diasPosTermo = totalDias - 280;
-                return String.format("%d dias pós-termo", diasPosTermo);
+                return String.format("%d dias de vida", diasPosTermo);
             }
 
         } else {
+
             Long dias = diasVividos();
             if (dias >= 7) {
-                long semanas = dias / 7;
-                long diasRestantes = dias % 7;
-                return String.format("%d semanas e %d dias (a termo)", semanas, diasRestantes);
+
+                long meses = ChronoUnit.MONTHS.between(getDataNascimento(), LocalDate.now(ZoneId.of("America/Sao_Paulo")));
+
+                // APENAS UM AUXILIAR PARA NO CALCULO DE SEMANAS EXCLUIR O QUE JÁ FOI CONTADO NO MÊS
+                LocalDate auxMes = getDataNascimento().plusMonths(meses);
+
+                long semanas = ChronoUnit.DAYS.between(auxMes, LocalDate.now(ZoneId.of("America/Sao_Paulo"))) / 7;
+                long diasRestantes = ChronoUnit.DAYS.between(auxMes, LocalDate.now(ZoneId.of("America/Sao_Paulo"))) % 7;
+
+
+                return String.format("%d meses, %d semanas e %d dias", meses, semanas, diasRestantes);
             } else {
                 return String.format("%d dias de vida", dias);
             }
